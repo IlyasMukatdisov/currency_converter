@@ -1,6 +1,6 @@
 import 'package:currency_converter/pages/components/footer.dart';
 import 'package:currency_converter/pages/components/header.dart';
-import 'package:currency_converter/pages/components/main_card.dart';
+import 'package:currency_converter/pages/components/currency_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 40,
                 ),
-                MainCard(),
+                CurrencyCard(),
                 SizedBox(
                   height: 30,
                 ),

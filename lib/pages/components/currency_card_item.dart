@@ -1,24 +1,31 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:currency_converter/utils/text_styles.dart';
+import 'package:currency_converter/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:currency_converter/utils/text_styles.dart';
+
 class CurrencyCardItem extends HookWidget {
   final String bodyText;
-  final String currencyText;
+  final String currencyType;
   final String amount;
+  final bool isConverted;
   const CurrencyCardItem({
     Key? key,
     required this.bodyText,
-    required this.currencyText,
+    required this.currencyType,
     required this.amount,
+    required this.isConverted,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _controller = useTextEditingController();
+    final controller = useTextEditingController();
+    if (controller.text.isEmpty) {
+      controller.text = amount;
+    }
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -41,7 +48,7 @@ class CurrencyCardItem extends HookWidget {
                   alignment: Alignment.centerLeft,
                   onChanged: (value) {},
                   borderRadius: BorderRadius.circular(10),
-                  value: 'USD',
+                  value: currencyType,
                   icon: const Icon(
                     Icons.arrow_drop_down_outlined,
                     color: Color(0xFF989898),
@@ -49,7 +56,7 @@ class CurrencyCardItem extends HookWidget {
                   focusColor: Colors.transparent,
                   items: [
                     DropdownMenuItem(
-                      value: 'USD',
+                      value: Strings.usd,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -64,14 +71,14 @@ class CurrencyCardItem extends HookWidget {
                             width: 13,
                           ),
                           Text(
-                            'USD',
+                            Strings.usd,
                             style: TextStyles.cardHeaderTextStyle,
                           ),
                         ],
                       ),
                     ),
                     DropdownMenuItem(
-                      value: 'EUR',
+                      value: Strings.eur,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: const [
@@ -85,7 +92,7 @@ class CurrencyCardItem extends HookWidget {
                             width: 13,
                           ),
                           Text(
-                            'USD',
+                            Strings.eur,
                             style: TextStyles.cardHeaderTextStyle,
                           ),
                         ],
@@ -112,10 +119,10 @@ class CurrencyCardItem extends HookWidget {
                   ],
                   onFieldSubmitted: (value) {
                     if (value.endsWith('.')) {
-                      _controller.text = '${_controller.text}0';
+                      controller.text = '${controller.text}0';
                     }
                   },
-                  controller: _controller,
+                  controller: controller,
                   cursorColor: const Color(0xFF3C3C3C),
                   expands: false,
                   textAlign: TextAlign.end,
