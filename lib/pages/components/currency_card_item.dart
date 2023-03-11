@@ -2,8 +2,10 @@
 
 import 'package:currency_converter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class CurrencyCardItem extends StatefulWidget {
+class CurrencyCardItem extends HookWidget {
   final String bodyText;
   final String currencyText;
   final String amount;
@@ -15,33 +17,16 @@ class CurrencyCardItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CurrencyCardItem> createState() => _CurrencyCardItemState();
-}
-
-class _CurrencyCardItemState extends State<CurrencyCardItem> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    _controller = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final _controller = useTextEditingController();
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.bodyText,
+            bodyText,
             style: TextStyles.cardBodyTextStyle,
           ),
           const SizedBox(
@@ -117,8 +102,18 @@ class _CurrencyCardItemState extends State<CurrencyCardItem> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextFormField(
-                  onChanged: (value) {
-                    
+                  maxLines: 1,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'\d+\.?\d*'),
+                    ),
+                  ],
+                  onFieldSubmitted: (value) {
+                    if (value.endsWith('.')) {
+                      _controller.text = '${_controller.text}0';
+                    }
                   },
                   controller: _controller,
                   cursorColor: const Color(0xFF3C3C3C),
