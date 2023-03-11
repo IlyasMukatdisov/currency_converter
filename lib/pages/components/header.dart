@@ -24,6 +24,7 @@ class Header extends StatelessWidget {
           Text(
             'Check live rates, set rate alerts, receive notifications and more.',
             style: TextStyles.bodyTextStyle,
+            textAlign: TextAlign.center,
           ),
         ],
       ),

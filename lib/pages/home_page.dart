@@ -1,3 +1,4 @@
+import 'package:currency_converter/pages/components/footer.dart';
 import 'package:currency_converter/pages/components/header.dart';
 import 'package:currency_converter/pages/components/main_card.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,14 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Header(),
+              SizedBox(
+                height: 40,
+              ),
               MainCard(),
+              SizedBox(
+                height: 30,
+              ),
+              Footer(),
             ],
           ),
         ),

@@ -1,11 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:currency_converter/utils/custom_clippers.dart';
 import 'package:currency_converter/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class CurrencyCardItem extends StatelessWidget {
+class CurrencyCardItem extends StatefulWidget {
   final String bodyText;
   final String currencyText;
   final String amount;
@@ -17,6 +15,25 @@ class CurrencyCardItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<CurrencyCardItem> createState() => _CurrencyCardItemState();
+}
+
+class _CurrencyCardItemState extends State<CurrencyCardItem> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -24,14 +41,15 @@ class CurrencyCardItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            bodyText,
+            widget.bodyText,
             style: TextStyles.cardBodyTextStyle,
           ),
           const SizedBox(
             height: 14,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Wrap(
+            spacing: 15,
+            runSpacing: 15,
             children: [
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -41,7 +59,7 @@ class CurrencyCardItem extends StatelessWidget {
                   value: 'USD',
                   icon: const Icon(
                     Icons.arrow_drop_down_outlined,
-                    color: Color(0xFF3C3C3C),
+                    color: Color(0xFF989898),
                   ),
                   focusColor: Colors.transparent,
                   items: [
@@ -90,7 +108,30 @@ class CurrencyCardItem extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
+              Container(
+                width: 100,
+                padding: const EdgeInsets.only(left: 20, right: 15),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFEFEF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextFormField(
+                  onChanged: (value) {
+                    
+                  },
+                  controller: _controller,
+                  cursorColor: const Color(0xFF3C3C3C),
+                  expands: false,
+                  textAlign: TextAlign.end,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyles.cardHeaderTextStyle.copyWith(
+                    color: const Color(0xFF3C3C3C),
+                  ),
+                ),
+              ),
             ],
           )
         ],
