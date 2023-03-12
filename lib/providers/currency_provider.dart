@@ -1,52 +1,88 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:currency_converter/model/currency_rate_model.dart';
 import 'package:currency_converter/utils/strings.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Future<List<CurrencyRateModel>> getCourses() async {
+//   final List<CurrencyRateModel> list = [];
+//   try {
+//     final snapshot = await FirebaseFirestore.instance
+//         .collection(Strings.currencyRatesCollection)
+//         .get();
+//     snapshot.docs.map(
+//       (doc) => list.add(
+//         CurrencyRateModel.fromMap(
+//           doc.data(),
+//         ),
+//       ),
+//     );
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   }
+//   return list;
+// }
 
-
+final firebaseCurrencyProvider = AutoDisposeFutureProvider<List<CurrencyModel>>(
+  (ref) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection(Strings.currencyCollection)
+        .get();
+    return snapshot.docs
+        .map(
+          (doc) => CurrencyModel.fromMap(
+            doc.data(),
+          ),
+        )
+        .toList();
+  },
+);
 
 final currencyAmountProvider =
-    NotifierProvider<CurrencyAmountNotifier, Map<String, double>>(
+    AutoDisposeNotifierProvider<CurrencyAmountNotifier, Map<String, double>>(
   () {
     return CurrencyAmountNotifier();
   },
 );
 
-class CurrencyAmountNotifier extends Notifier<Map<String, double>> {
+class CurrencyAmountNotifier extends AutoDisposeNotifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      Strings.amount: 10000,
-      Strings.convertedAmount: 1,
+      Strings.amount: 0,
+      Strings.convertedAmount: 0,
+    };
+  }
+
+  void reset() {
+    state = {
+      Strings.amount: 0,
+      Strings.convertedAmount: 0,
     };
   }
 
   void setAmount(double amount) {
-    final double convertedAmount = 2 * amount;
-
     state = {
       Strings.amount: amount,
-      Strings.convertedAmount: convertedAmount,
+      Strings.convertedAmount: state[Strings.convertedAmount]!,
     };
   }
 
   void setConvertedAmount(double convertedAmount) {
-    final double amount = 0.5 * convertedAmount;
-
     state = {
-      Strings.amount: amount,
+      Strings.amount: state[Strings.amount]!,
       Strings.convertedAmount: convertedAmount,
     };
   }
 }
 
-final currencyTypeProvider =
-    NotifierProvider<CurrencyTypeNotifier, Map<String, String>>(
+final currencyNameProvider =
+    AutoDisposeNotifierProvider<CurrencyNameNotifier, Map<String, String>>(
   () {
-    return CurrencyTypeNotifier();
+    return CurrencyNameNotifier();
   },
 );
 
-class CurrencyTypeNotifier extends Notifier<Map<String, String>> {
+class CurrencyNameNotifier extends AutoDisposeNotifier<Map<String, String>> {
   @override
   build() {
     return {
